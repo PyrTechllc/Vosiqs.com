@@ -1,0 +1,76 @@
+{
+  "placeholderImages": [
+    {
+      "id": "1",
+      "description": "Lofi hip hop radio - beats to relax/study to",
+      "imageUrl": "https://images.unsplash.com/photo-1691697590646-c9b7bf6bef85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsb2ZpJTIwZ2lybHxlbnwwfHx8fDE3NjY5OTAwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lofi girl"
+    },
+    {
+      "id": "2",
+      "description": "Rainy Jazz Cafe - Slow Jazz Music for Relaxing, Study",
+      "imageUrl": "https://images.unsplash.com/photo-1523965422831-c6dcc7272e77?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cmFpbnklMjB3aW5kb3d8ZW58MHx8fHwxNzY2OTkwMDE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "rainy window"
+    },
+    {
+      "id": "3",
+      "description": "Synthwave music for coding",
+      "imageUrl": "https://images.unsplash.com/photo-1765211003026-f7666ea3a948?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxyZXRybyUyMGdyaWR8ZW58MHx8fHwxNzY2OTkwMDE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "retro grid"
+    },
+    {
+      "id": "4",
+      "description": "Acoustic indie folk compilation",
+      "imageUrl": "https://images.unsplash.com/photo-1680155161394-196f2f55df7d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxndWl0YXIlMjBmb3Jlc3R8ZW58MHx8fHwxNzY2OTkwMDE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "guitar forest"
+    },
+    {
+      "id": "5",
+      "description": "Classical music for reading",
+      "imageUrl": "https://images.unsplash.com/photo-1508107536691-b1449928187d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxvbGQlMjBsaWJyYXJ5fGVufDB8fHx8MTc2Njk3MzM5NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "old library"
+    },
+    {
+      "id": "6",
+      "description": "Deep focus music for concentration",
+      "imageUrl": "https://images.unsplash.com/photo-1719650592946-55163c4994cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxicmFpbiUyMG5ldXJvbnN8ZW58MHx8fHwxNzY2OTgzNjMwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "brain neurons"
+    },
+    {
+      "id": "7",
+      "description": "Tropical house for summer vibes",
+      "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxiZWFjaCUyMHN1bnNldHxlbnwwfHx8fDE3NjY5MDU5MDB8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "beach sunset"
+    },
+    {
+      "id": "8",
+      "description": "Ambient space music for sleep",
+      "imageUrl": "https://images.unsplash.com/photo-1628317887507-3c3e2ddd3281?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxuZWJ1bGElMjBnYWxheHl8ZW58MHx8fHwxNzY2OTMxNDM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nebula galaxy"
+    },
+    {
+      "id": "9",
+      "description": "90s hip hop classics playlist",
+      "imageUrl": "https://images.unsplash.com/photo-1760368104876-68470dc0dc47?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxib29tYm94JTIwZ3JhZmZpdGl8ZW58MHx8fHwxNzY2OTkwMDE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "boombox graffiti"
+    },
+    {
+      "id": "10",
+      "description": "Upbeat funk music for a good mood",
+      "imageUrl": "https://images.unsplash.com/photo-1596131397999-bb01560efcae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxkaXNjbyUyMGxpZ2h0c3xlbnwwfHx8fDE3NjY5OTAwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "disco lights"
+    },
+    {
+      "id": "11",
+      "description": "Chillstep compilation for late night gaming",
+      "imageUrl": "https://images.unsplash.com/photo-1620705914357-a9d11009e068?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxnbG93aW5nJTIwa2V5Ym9hcmR8ZW58MHx8fHwxNzY2OTkwMDE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "glowing keyboard"
+    },
+    {
+      "id": "12",
+      "description": "Piano music for meditation and calm",
+      "imageUrl": "https://images.unsplash.com/photo-1674893168376-c3d8efc23906?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHx6ZW4lMjBnYXJkZW58ZW58MHx8fHwxNzY2OTgyNjI0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "zen garden"
+    }
+  ]
+}
