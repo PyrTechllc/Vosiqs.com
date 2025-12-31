@@ -1,4 +1,4 @@
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 export default {
   darkMode: ['class'],
@@ -89,7 +89,7 @@ export default {
           },
         },
         'pulse-slow': {
-          '50%': { opacity: 0.5 },
+          '50%': { opacity: '0.5' },
         },
       },
       animation: {
