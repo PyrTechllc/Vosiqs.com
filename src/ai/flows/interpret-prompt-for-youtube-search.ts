@@ -7,8 +7,8 @@
  * - InterpretPromptOutput - The return type for the interpretPromptForYouTubeSearch function, which includes the interpreted genres, moods, topics, and a refined search query.
  */
 
-import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import { ai } from '@/ai/genkit';
+import { z } from 'genkit';
 
 const InterpretPromptInputSchema = z.object({
   prompt: z.string().describe('The user-provided prompt to interpret.'),
@@ -29,8 +29,8 @@ export async function interpretPromptForYouTubeSearch(input: InterpretPromptInpu
 
 const interpretPrompt = ai.definePrompt({
   name: 'interpretPrompt',
-  input: {schema: InterpretPromptInputSchema},
-  output: {schema: InterpretPromptOutputSchema},
+  input: { schema: InterpretPromptInputSchema },
+  output: { schema: InterpretPromptOutputSchema },
   prompt: `You are an AI assistant that interprets user prompts to identify key genres, moods, and topics for generating a YouTube search query.
 
 Given the following prompt:
@@ -59,7 +59,7 @@ const interpretPromptFlow = ai.defineFlow(
     outputSchema: InterpretPromptOutputSchema,
   },
   async input => {
-    const {output} = await interpretPrompt(input);
+    const { output } = await interpretPrompt(input);
     return output!;
   }
 );
