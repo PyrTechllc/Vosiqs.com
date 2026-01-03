@@ -97,7 +97,28 @@ export function VosiqsHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button variant="ghost" onClick={() => signInWithGoogle()}>
+          <Button
+            variant="ghost"
+            onClick={async () => {
+              try {
+                await signInWithGoogle();
+              } catch (error: any) {
+                if (error.code === 'auth/popup-blocked') {
+                  toast({
+                    variant: "destructive",
+                    title: "Popup Blocked",
+                    description: "Please allow popups for this site to sign in with Google."
+                  });
+                } else if (error.code !== 'auth/popup-closed-by-user') {
+                  toast({
+                    variant: "destructive",
+                    title: "Sign In Failed",
+                    description: error.message || "An unexpected error occurred."
+                  });
+                }
+              }
+            }}
+          >
             Sign In
           </Button>
         )}

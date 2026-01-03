@@ -8,8 +8,12 @@ let auth: Auth | undefined;
 let firestore: Firestore | undefined;
 
 function initializeFirebase() {
-  if (typeof window !== 'undefined' && !getApps().length) {
-    firebaseApp = initializeApp(firebaseConfig);
+  if (typeof window !== 'undefined') {
+    if (!getApps().length) {
+      firebaseApp = initializeApp(firebaseConfig);
+    } else {
+      firebaseApp = getApps()[0];
+    }
     auth = getAuth(firebaseApp);
     firestore = getFirestore(firebaseApp);
   }

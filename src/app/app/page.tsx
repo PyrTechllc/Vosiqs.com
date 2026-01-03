@@ -53,16 +53,41 @@ export default function AppPage() {
   const handleGeneratePlaylist = async (currentPrompt: string) => {
     if (!currentPrompt) return;
 
-    if (!user) {
-      toast({ title: "Sign In Required", description: "Please sign in to generate playlists." });
-      return;
-    }
+    if (user) {
+      try {
+        await checkAndIncrementUsage(user.uid, 'prompt');
+      } catch (e: any) {
+        toast({ variant: "destructive", title: "Limit Reached", description: e.message });
+        return;
+      }
+    } else {
+      // Guest usage tracking
+      const GUEST_LIMIT = 10;
+      const SEVEN_HOURS = 7 * 60 * 60 * 1000;
+      const now = Date.now();
 
-    try {
-      await checkAndIncrementUsage(user.uid, 'prompt');
-    } catch (e: any) {
-      toast({ variant: "destructive", title: "Limit Reached", description: e.message });
-      return;
+      const usageJson = localStorage.getItem('vosiqs_guest_usage');
+      let usage = usageJson ? JSON.parse(usageJson) : { count: 0, lastReset: now };
+
+      if (now - usage.lastReset > SEVEN_HOURS) {
+        usage = { count: 1, lastReset: now };
+      } else {
+        if (usage.count >= GUEST_LIMIT) {
+          const nextAvailable = usage.lastReset + SEVEN_HOURS;
+          const waitMs = nextAvailable - now;
+          const waitHours = Math.floor(waitMs / (1000 * 60 * 60));
+          const waitMins = Math.ceil((waitMs % (1000 * 60 * 60)) / (1000 * 60));
+
+          toast({
+            variant: "destructive",
+            title: "Guest Limit Reached",
+            description: `You've used ${GUEST_LIMIT} free prompts as a guest. Please sign in to save prompts or wait ${waitHours}h ${waitMins}m.`
+          });
+          return;
+        }
+        usage.count += 1;
+      }
+      localStorage.setItem('vosiqs_guest_usage', JSON.stringify(usage));
     }
 
     setIsLoading(true);
@@ -71,7 +96,8 @@ export default function AppPage() {
     setPrompt(currentPrompt);
 
     try {
-      const result = await generatePlaylistAction(currentPrompt);
+      const token = sessionStorage.getItem('youtube_access_token') || undefined;
+      const result = await generatePlaylistAction(currentPrompt, token);
       setPlaylist(result);
       setRerollCount(0);
     } catch (e: any) {
@@ -87,7 +113,6 @@ export default function AppPage() {
   };
 
   const handleReroll = async () => {
-    if (!user) return;
     if (rerollCount < 3) {
       try {
         // Increment reroll usage locally or remotely if we tracked it per user
@@ -102,7 +127,8 @@ export default function AppPage() {
         // I will just call the action again.
 
         setIsLoading(true);
-        const result = await generatePlaylistAction(prompt);
+        const token = sessionStorage.getItem('youtube_access_token') || undefined;
+        const result = await generatePlaylistAction(prompt, token);
         setPlaylist(result);
       } catch (e: any) {
         toast({ variant: "destructive", title: "Error", description: e.message });
@@ -126,7 +152,11 @@ export default function AppPage() {
   };
 
   const handleSavePlaylist = async () => {
-    if (!playlist || !user) return;
+    if (!playlist) return;
+    if (!user) {
+      toast({ title: "Sign In Required", description: "Please sign in to save playlists to your library." });
+      return;
+    }
     try {
       await savePlaylist(user.uid, playlist);
       toast({

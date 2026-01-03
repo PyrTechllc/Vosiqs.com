@@ -3,7 +3,7 @@
 import { generatePlaylist } from '@/ai/flows/generate-playlist';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Playlist, Video } from '@/lib/types';
-import { searchYouTube } from '@/lib/youtube';
+import { searchYouTube, getUserLikedVideoContext } from '@/lib/youtube';
 
 // Mock YouTube Search
 const mockYouTubeSearch = async (query: string): Promise<Video[]> => {
@@ -23,17 +23,24 @@ const mockYouTubeSearch = async (query: string): Promise<Video[]> => {
   }));
 };
 
-export async function generatePlaylistAction(prompt: string): Promise<Playlist> {
+export async function generatePlaylistAction(prompt: string, youtubeToken?: string): Promise<Playlist> {
   try {
     if (!prompt || prompt.trim().length < 5) {
       throw new Error('Please enter a more descriptive prompt.');
     }
 
-    // Run the consolidated AI flow
-    const result = await generatePlaylist({ prompt });
+    // Optionally fetch user history context if token is provided
+    let userContext = '';
+    if (youtubeToken) {
+      userContext = await getUserLikedVideoContext(youtubeToken);
+    }
+
+    // Run the consolidated AI flow with user context
+    const result = await generatePlaylist({ prompt, userContext });
 
     // Use the refined query from AI to search for videos
-    const videos = await searchYouTube(result.refinedQuery);
+    // Pass the token to searchYouTube for even more personalized results
+    const videos = await searchYouTube(result.refinedQuery, 12, youtubeToken);
     // const videos = await mockYouTubeSearch(result.refinedQuery); // fallback for dev? No, we want real one.
 
     if (videos.length === 0) {
