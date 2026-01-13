@@ -58,14 +58,22 @@ export async function generatePlaylistAction(prompt: string, youtubeToken?: stri
     };
 
   } catch (error: any) {
-    console.error('CRITICAL ERROR in generatePlaylistAction:', error);
+    console.error('SERVER ACTION ERROR (generatePlaylistAction):', {
+      message: error?.message,
+      stack: error?.stack,
+      prompt: prompt.substring(0, 50) + '...',
+      hasYoutubeKey: !!process.env.YOUTUBE_API_KEY,
+      hasGeminiKey: !!process.env.GOOGLE_GENAI_API_KEY,
+    });
 
-    const errorMessage = error?.message || 'Unknown error';
-
-    if (errorMessage.includes('429')) {
-      throw new Error('You have exceeded the request limit (429). Please try again later.');
+    // Check for missing keys explicitly
+    if (!process.env.GOOGLE_GENAI_API_KEY) {
+      throw new Error('AI service not configured: Missing GOOGLE_GENAI_API_KEY on the server.');
     }
 
-    throw new Error(`Playlist Generation Failed: ${errorMessage}`);
+    const errorMessage = error?.message || 'Undefined Error';
+
+    // Hide details in production if needed, but for now we want to see them to fix the app
+    throw new Error(`Playlist Generation Error: ${errorMessage}`);
   }
 }
