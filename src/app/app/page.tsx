@@ -191,7 +191,7 @@ export default function AppPage() {
     <div className="text-center animate-in fade-in-50 duration-500">
       <div className="flex flex-col items-center gap-8">
         <div className="flex flex-col gap-4">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tighter leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter leading-tight">
             What do you want to watch?
           </h1>
         </div>
@@ -257,17 +257,12 @@ export default function AppPage() {
           <Card className='h-24 flex items-center justify-center'>
             <span className='text-muted-foreground'>Ad Banner</span>
           </Card>
-          <div className="relative group">
-            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-accent to-yellow-500 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition duration-1000 animate-pulse-slow"></div>
-            <div className="relative">
-              <PromptForm
-                prompt={prompt}
-                setPrompt={setPrompt}
-                onSubmit={handleGeneratePlaylist}
-                isLoading={isLoading}
-              />
-            </div>
-          </div>
+          <PromptForm
+            prompt={prompt}
+            setPrompt={setPrompt}
+            onSubmit={handleGeneratePlaylist}
+            isLoading={isLoading}
+          />
         </div>
 
         {playingVideo && (

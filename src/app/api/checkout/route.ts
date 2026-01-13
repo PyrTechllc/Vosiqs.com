@@ -13,23 +13,33 @@ export async function POST(req: Request) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
 
-        const priceData = plan === 'yearly'
-            ? {
-                unit_amount: 5999, // $59.99
-                recurring: { interval: 'year' },
+        let priceData;
+        let subscriptionData = {};
+
+        if (plan === 'weekly') {
+            priceData = {
+                unit_amount: 399, // $3.99
+                recurring: { interval: 'week' },
                 product_data: {
-                    name: 'Vosiqs+ Pro (Annual)',
-                    description: 'Unlimited playlists, unlimited re-rolls, and more. Billed annually.',
+                    name: 'Vosiqs+ Pro (Weekly)',
+                    description: 'Unlimited playlists, downloads, and no ads. Billed weekly.',
                 }
-            }
-            : {
+            };
+        } else {
+            // Default to Monthly
+            priceData = {
                 unit_amount: 599, // $5.99
                 recurring: { interval: 'month' },
                 product_data: {
                     name: 'Vosiqs+ Pro (Monthly)',
-                    description: 'Unlimited playlists, unlimited re-rolls, and more. Billed monthly.',
+                    description: 'Unlimited playlists, downloads, and no ads. Billed monthly.',
                 }
             };
+            // Add 7-day trial for monthly plan
+            subscriptionData = {
+                trial_period_days: 7,
+            };
+        }
 
         const checkoutSession = await stripe.checkout.sessions.create({
             success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/app?success=true`,
@@ -49,6 +59,7 @@ export async function POST(req: Request) {
                     quantity: 1,
                 },
             ],
+            subscription_data: Object.keys(subscriptionData).length > 0 ? subscriptionData : undefined,
             metadata: {
                 userId,
             },

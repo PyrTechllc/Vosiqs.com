@@ -196,7 +196,7 @@ const Sidebar = React.forwardRef<
       return (
         <>
           <div
-            className="fixed inset-y-0 left-0 z-20 flex w-12 flex-col border-r bg-sidebar text-sidebar-foreground"
+            className="fixed inset-y-0 left-0 z-20 flex w-12 flex-col border-r bg-sidebar text-sidebar-foreground group"
             data-sidebar="sidebar"
             data-state="collapsed"
             data-mobile="true"
@@ -216,7 +216,7 @@ const Sidebar = React.forwardRef<
               side={side}
             >
               <SheetHeader>
-                  <SheetTitle className="sr-only">Sidebar</SheetTitle>
+                <SheetTitle className="sr-only">Sidebar</SheetTitle>
               </SheetHeader>
               <div className="flex h-full w-full flex-col">{children}</div>
             </SheetContent>
@@ -240,7 +240,7 @@ const Sidebar = React.forwardRef<
             side === 'left' ? 'left-0' : 'right-0',
             'group-data-[state=expanded]:w-64 group-data-[state=collapsed]:w-12',
             variant === 'sidebar' &&
-              (side === 'left' ? 'border-r' : 'border-l'),
+            (side === 'left' ? 'border-r' : 'border-l'),
             className
           )}
           {...props}
@@ -482,9 +482,9 @@ const SidebarGroupContent = React.forwardRef<
     ref={ref}
     data-sidebar="group-content"
     className={cn('w-full text-sm',
-    'group-data-[mobile-sheet=true]:group-data-[state=expanded]:block',
-    'group-data-[mobile=true]:hidden',
-     className)}
+      'group-data-[mobile-sheet=true]:group-data-[state=expanded]:block',
+      'group-data-[mobile=true]:hidden',
+      className)}
     {...props}
   />
 ));
@@ -569,9 +569,9 @@ const SidebarMenuButton = React.forwardRef<
         data-size={size}
         data-active={isActive}
         className={cn(sidebarMenuButtonVariants({ variant, size }),
-        'group-data-[mobile-sheet=true]:group-data-[state=expanded]:flex',
-        'group-data-[mobile=true]:justify-center group-data-[mobile=true]:p-2',
-        className)}
+          'group-data-[mobile-sheet=true]:group-data-[state=expanded]:flex',
+          'group-data-[mobile=true]:justify-center group-data-[mobile=true]:p-2',
+          className)}
         {...props}
       >
         {children}
@@ -625,7 +625,7 @@ const SidebarMenuAction = React.forwardRef<
         'peer-data-[size=lg]/menu-button:top-2.5',
         'group-data-[collapsible=icon]:hidden',
         showOnHover &&
-          'group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0',
+        'group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0',
         className
       )}
       {...props}

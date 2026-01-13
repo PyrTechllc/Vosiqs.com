@@ -66,7 +66,7 @@ export function VosiqsHeader() {
       <div className="ml-auto flex items-center gap-2">
         <Button variant="outline" className="gap-2" onClick={handleUpgradeClick}>
           <Crown className="w-4 h-4 text-amber-400" />
-          Get Plus
+          <span className="hidden sm:inline">Get Plus</span>
         </Button>
         {isLoading ? (
           <Loader2 className="w-5 h-5 animate-spin" />
