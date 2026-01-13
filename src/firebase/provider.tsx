@@ -13,9 +13,9 @@ interface FirebaseContextValue {
 }
 
 const FirebaseContext = createContext<FirebaseContextValue>({
-  firebaseApp,
-  auth,
-  firestore,
+  firebaseApp: undefined,
+  auth: undefined,
+  firestore: undefined,
 });
 
 export const useFirebase = () => useContext(FirebaseContext);
