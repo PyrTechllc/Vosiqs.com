@@ -16,32 +16,25 @@ import { useToast } from '@/hooks/use-toast';
 
 
 
+import { useState } from 'react';
+import { PricingModal } from './PricingModal';
+
+// ... (other imports remain, just adding useState and PricingModal)
 
 export function VosiqsHeader() {
   const { user, isLoading } = useUser();
   const { isMobile, toggleSidebar } = useSidebar();
+  const [showPricing, setShowPricing] = useState(false);
 
   const { toast } = useToast();
 
-  const handleCheckout = async () => {
+  const handleUpgradeClick = () => {
     if (!user) {
       toast({ title: "Sign In Required", description: "Please sign in to upgrade." });
       signInWithGoogle();
       return;
     }
-    try {
-      const res = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.uid, userEmail: user.email })
-      });
-      if (!res.ok) throw new Error("Checkout failed");
-      const { url } = await res.json();
-      window.location.href = url;
-    } catch (e) {
-      console.error(e);
-      toast({ variant: "destructive", title: "Error", description: "Something went wrong starting checkout." });
-    }
+    setShowPricing(true);
   };
 
   return (
@@ -63,7 +56,7 @@ export function VosiqsHeader() {
         <DropdownMenuContent align="start">
           <DropdownMenuLabel>Models</DropdownMenuLabel>
           <DropdownMenuItem>Vosiqs 1.0 (Default)</DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" onClick={handleCheckout}>
+          <DropdownMenuItem className="gap-2" onClick={handleUpgradeClick}>
             <Crown className="text-amber-400" />
             <span>Vosiqs+</span>
           </DropdownMenuItem>
@@ -71,7 +64,7 @@ export function VosiqsHeader() {
       </DropdownMenu>
 
       <div className="ml-auto flex items-center gap-2">
-        <Button variant="outline" className="gap-2" onClick={handleCheckout}>
+        <Button variant="outline" className="gap-2" onClick={handleUpgradeClick}>
           <Crown className="w-4 h-4 text-amber-400" />
           Get Plus
         </Button>
@@ -123,6 +116,7 @@ export function VosiqsHeader() {
           </Button>
         )}
       </div>
+      <PricingModal isOpen={showPricing} onOpenChange={setShowPricing} />
     </header>
   );
 }

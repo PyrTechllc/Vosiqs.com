@@ -7,11 +7,29 @@ const PRO_PRICE_ID = 'price_1Q...'; // Placeholder, user needs to set this or cr
 
 export async function POST(req: Request) {
     try {
-        const { userId, userEmail } = await req.json();
+        const { userId, userEmail, plan = 'monthly' } = await req.json();
 
         if (!userId) {
             return new NextResponse('Unauthorized', { status: 401 });
         }
+
+        const priceData = plan === 'yearly'
+            ? {
+                unit_amount: 5999, // $59.99
+                recurring: { interval: 'year' },
+                product_data: {
+                    name: 'Vosiqs+ Pro (Annual)',
+                    description: 'Unlimited playlists, unlimited re-rolls, and more. Billed annually.',
+                }
+            }
+            : {
+                unit_amount: 599, // $5.99
+                recurring: { interval: 'month' },
+                product_data: {
+                    name: 'Vosiqs+ Pro (Monthly)',
+                    description: 'Unlimited playlists, unlimited re-rolls, and more. Billed monthly.',
+                }
+            };
 
         const checkoutSession = await stripe.checkout.sessions.create({
             success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/app?success=true`,
@@ -24,14 +42,9 @@ export async function POST(req: Request) {
                 {
                     price_data: {
                         currency: 'usd',
-                        product_data: {
-                            name: 'Vosiqs+ Pro',
-                            description: 'Unlimited playlists, unlimited re-rolls, and more.',
-                        },
-                        unit_amount: 799,
-                        recurring: {
-                            interval: 'month',
-                        },
+                        product_data: priceData.product_data,
+                        unit_amount: priceData.unit_amount,
+                        recurring: priceData.recurring as any,
                     },
                     quantity: 1,
                 },
