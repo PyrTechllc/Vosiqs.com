@@ -57,15 +57,15 @@ export async function generatePlaylistAction(prompt: string, youtubeToken?: stri
       videos,
     };
 
-  } catch (error) {
-    console.error('Error generating playlist:', error);
-    // Provide a more user-friendly error message
-    if (error instanceof Error) {
-      if (error.message.includes('429')) {
-        throw new Error('You have exceeded the request limit. Please try again later.');
-      }
-      throw new Error(`Failed to generate playlist: ${error.message}`);
+  } catch (error: any) {
+    console.error('CRITICAL ERROR in generatePlaylistAction:', error);
+
+    const errorMessage = error?.message || 'Unknown error';
+
+    if (errorMessage.includes('429')) {
+      throw new Error('You have exceeded the request limit (429). Please try again later.');
     }
-    throw new Error('An unexpected error occurred while generating your playlist.');
+
+    throw new Error(`Playlist Generation Failed: ${errorMessage}`);
   }
 }
