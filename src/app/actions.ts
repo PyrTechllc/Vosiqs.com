@@ -3,7 +3,7 @@
 import { generatePlaylist } from '@/ai/flows/generate-playlist';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { Playlist, Video } from '@/lib/types';
-import { searchYouTube, getUserLikedVideoContext } from '@/lib/youtube';
+import { searchYouTube, getUserContext } from '@/lib/youtube';
 
 // Mock YouTube Search
 const mockYouTubeSearch = async (query: string): Promise<Video[]> => {
@@ -32,7 +32,10 @@ export async function generatePlaylistAction(prompt: string, youtubeToken?: stri
     // Optionally fetch user history context if token is provided
     let userContext = '';
     if (youtubeToken) {
-      userContext = await getUserLikedVideoContext(youtubeToken);
+      userContext = await getUserContext(youtubeToken);
+      console.log('--- User Context for AI ---');
+      console.log(userContext);
+      console.log('---------------------------');
     }
 
     // Run the consolidated AI flow with user context

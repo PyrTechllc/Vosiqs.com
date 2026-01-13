@@ -57,7 +57,8 @@ export async function searchYouTube(query: string, maxResults = 12, accessToken?
     }
 }
 
-export async function getUserLikedVideoContext(accessToken: string): Promise<string> {
+
+async function getLikedVideos(accessToken: string): Promise<string> {
     const url = new URL('https://www.googleapis.com/youtube/v3/videos');
     url.searchParams.append('myRating', 'like');
     url.searchParams.append('part', 'snippet');
@@ -75,10 +76,54 @@ export async function getUserLikedVideoContext(accessToken: string): Promise<str
         const data = await response.json();
         if (!data.items || data.items.length === 0) return '';
 
-        const vibes = data.items.map((item: any) => item.snippet.title).join(', ');
-        return `User recently liked: ${vibes}`;
+        const videos = data.items.map((item: any) => item.snippet.title).join(', ');
+        return `User recently liked: ${videos}`;
     } catch (e) {
         console.error('Failed to fetch liked videos:', e);
+        return '';
+    }
+}
+
+async function getSubscriptions(accessToken: string): Promise<string> {
+    const url = new URL('https://www.googleapis.com/youtube/v3/subscriptions');
+    url.searchParams.append('part', 'snippet');
+    url.searchParams.append('mine', 'true');
+    url.searchParams.append('maxResults', '10');
+
+    try {
+        const response = await fetch(url.toString(), {
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            }
+        });
+
+        if (!response.ok) return '';
+
+        const data = await response.json();
+        if (!data.items || data.items.length === 0) return '';
+
+        const channels = data.items.map((item: any) => item.snippet.title).join(', ');
+        return `User is subscribed to: ${channels}`;
+    } catch (e) {
+        console.error('Failed to fetch subscriptions:', e);
+        return '';
+    }
+}
+
+export async function getUserContext(accessToken: string): Promise<string> {
+    try {
+        const [likes, subs] = await Promise.all([
+            getLikedVideos(accessToken),
+            getSubscriptions(accessToken)
+        ]);
+
+        const parts = [];
+        if (likes) parts.push(likes);
+        if (subs) parts.push(subs);
+
+        return parts.join('\n');
+    } catch (error) {
+        console.error('Error fetching user context:', error);
         return '';
     }
 }

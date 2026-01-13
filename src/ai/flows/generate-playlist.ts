@@ -42,7 +42,11 @@ const prompt = ai.definePrompt({
 User Prompt: {{{prompt}}}
 User History Context: {{{userContext}}}
 
-If user history context is provided, try to subtly align the vibes with their interests while staying true to the primary prompt.
+If user history context is provided (which may include liked videos and subscribed channels), strongly consider it to tailor the "vibe" and recommendations.
+- For example, if the user subscribes to many Jazz channels, and asks for "relaxing music", lean towards Jazz.
+- However, do not strictly limit to only these if the prompt explicitly asks for something different.
+- Use the context to infer taste and preferences.
+
 Generate the output in the requested JSON format.`,
 });
 

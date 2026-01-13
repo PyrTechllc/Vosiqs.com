@@ -25,7 +25,8 @@ export async function checkAndIncrementUsage(userId: string, type: 'prompt' | 'r
     }
 
     const data = userSnap.data();
-    const isPro = data.isPro || false;
+    // const isPro = data.isPro || false;
+    const isPro = true; // Temporary override: Make everyone PRO 
 
     if (isPro) return true;
 
@@ -74,7 +75,8 @@ export async function savePlaylist(userId: string, playlist: Playlist) {
     // Get user status
     const userRef = doc(firestore, 'users', userId);
     const userSnap = await getDoc(userRef);
-    const isPro = userSnap.exists() ? userSnap.data().isPro : false;
+    // const isPro = userSnap.exists() ? userSnap.data().isPro : false;
+    const isPro = true; // Temporary override
 
     // Check limit (10 for free, 100 for pro)
     const playlistsRef = collection(firestore, 'users', userId, 'playlists');
