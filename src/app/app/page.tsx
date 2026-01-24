@@ -98,7 +98,12 @@ export default function AppPage() {
     try {
       const token = sessionStorage.getItem('youtube_access_token') || undefined;
       const result = await generatePlaylistAction(currentPrompt, token);
-      setPlaylist(result);
+
+      if ('error' in result) {
+        throw new Error(result.error);
+      }
+
+      setPlaylist(result as Playlist);
       setRerollCount(0);
     } catch (e: any) {
       setError(e.message || 'An unknown error occurred.');
@@ -115,21 +120,17 @@ export default function AppPage() {
   const handleReroll = async () => {
     if (rerollCount < 3) {
       try {
-        // Increment reroll usage locally or remotely if we tracked it per user
-        // The requirements say "3 re-rolls per prompt" which is local session.
-        // But "limit 10 prompts" is global.
         setRerollCount(prev => prev + 1);
-
-        // We re-call action but maybe bypass prompt usage increment?
-        // generatePlaylistAction calls AI + search.
-        // We should probably NOT charge a "prompt" credit for a reroll, or maybe we do?
-        // Usually reroll is cheaper or free if limited per prompt.
-        // I will just call the action again.
-
         setIsLoading(true);
+
         const token = sessionStorage.getItem('youtube_access_token') || undefined;
         const result = await generatePlaylistAction(prompt, token);
-        setPlaylist(result);
+
+        if ('error' in result) {
+          throw new Error(result.error);
+        }
+
+        setPlaylist(result as Playlist);
       } catch (e: any) {
         toast({ variant: "destructive", title: "Error", description: e.message });
       } finally {
