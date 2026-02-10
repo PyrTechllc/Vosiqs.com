@@ -29,15 +29,20 @@ export async function generatePlaylistAction(prompt: string, youtubeToken?: stri
       return { error: 'Please enter a more descriptive prompt.' };
     }
 
+    // Optional: Validate prompt length
+    if (prompt.length > 500) {
+      return { error: 'Prompt is too long. Please keep it under 500 characters.' };
+    }
+
     console.log('=== Starting Playlist Generation ===');
-    console.log('Prompt:', prompt);
+    // console.log('Prompt:', prompt); // REMOVED PRESERVING PRIVACY
 
     // Optionally fetch user history context if token is provided
     let userContext = '';
     if (youtubeToken) {
       try {
         userContext = await getUserContext(youtubeToken);
-        console.log('--- User Context for AI ---', userContext);
+        console.log('--- User Context fetched ---'); // REMOVED CONTENT PRESERVING PRIVACY
       } catch (contextError) {
         console.warn('Failed to fetch user context:', contextError);
         // Continue without context

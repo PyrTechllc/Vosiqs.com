@@ -14,61 +14,61 @@ export async function checkAndIncrementUsage(userId: string, type: 'prompt' | 'r
         const userRef = adminDb.collection('users').doc(userId);
         const userSnap = await userRef.get();
 
-    const now = new Date();
-    const SEVEN_HOURS = 7 * 60 * 60 * 1000;
+        const now = new Date();
+        const SEVEN_HOURS = 7 * 60 * 60 * 1000;
 
-    if (!userSnap.exists) {
-        await userRef.set({
-            usage: {
-                prompts: type === 'prompt' ? 1 : 0,
-                rerolls: type === 'reroll' ? 1 : 0,
-                lastReset: admin.firestore.FieldValue.serverTimestamp()
-            },
-            isPro: false
-        });
-        return true;
-    }
-
-    const data = userSnap.data() as any;
-    const isPro = data.isPro || false;
-
-    if (isPro) return true;
-
-    const usage = data.usage || { prompts: 0, rerolls: 0, lastReset: null };
-    // Convert Firestore timestamp to JS Date
-    const lastReset = usage.lastReset?.toDate?.() || new Date(0);
-    const timeSinceReset = now.getTime() - lastReset.getTime();
-
-    if (timeSinceReset >= SEVEN_HOURS) {
-        // Reset the window
-        await userRef.update({
-            'usage.prompts': type === 'prompt' ? 1 : 0,
-            'usage.rerolls': type === 'reroll' ? 1 : 0,
-            'usage.lastReset': admin.firestore.FieldValue.serverTimestamp()
-        });
-        return true;
-    }
-
-    if (type === 'prompt') {
-        if (usage.prompts >= 10) {
-            const nextAvailable = new Date(lastReset.getTime() + SEVEN_HOURS);
-            const waitMs = nextAvailable.getTime() - now.getTime();
-            const waitHours = Math.floor(waitMs / (1000 * 60 * 60));
-            const waitMins = Math.ceil((waitMs % (1000 * 60 * 60)) / (1000 * 60));
-
-            throw new Error(`You've used your 10 free prompts. Please wait ${waitHours}h ${waitMins}m or upgrade to Vosiqs+ for unlimited prompts!`);
+        if (!userSnap.exists) {
+            await userRef.set({
+                usage: {
+                    prompts: type === 'prompt' ? 1 : 0,
+                    rerolls: type === 'reroll' ? 1 : 0,
+                    lastReset: admin.firestore.FieldValue.serverTimestamp()
+                },
+                isPro: false
+            });
+            return true;
         }
 
-        await userRef.update({
-            'usage.prompts': admin.firestore.FieldValue.increment(1)
-        });
-    } else {
-        await userRef.update({
-            'usage.rerolls': admin.firestore.FieldValue.increment(1)
-        });
-    }
+        const data = userSnap.data() as any;
+        const isPro = data.isPro || false;
 
-    return true;
+        if (isPro) return true;
+
+        const usage = data.usage || { prompts: 0, rerolls: 0, lastReset: null };
+        // Convert Firestore timestamp to JS Date
+        const lastReset = usage.lastReset?.toDate?.() || new Date(0);
+        const timeSinceReset = now.getTime() - lastReset.getTime();
+
+        if (timeSinceReset >= SEVEN_HOURS) {
+            // Reset the window
+            await userRef.update({
+                'usage.prompts': type === 'prompt' ? 1 : 0,
+                'usage.rerolls': type === 'reroll' ? 1 : 0,
+                'usage.lastReset': admin.firestore.FieldValue.serverTimestamp()
+            });
+            return true;
+        }
+
+        if (type === 'prompt') {
+            if (usage.prompts >= 10) {
+                const nextAvailable = new Date(lastReset.getTime() + SEVEN_HOURS);
+                const waitMs = nextAvailable.getTime() - now.getTime();
+                const waitHours = Math.floor(waitMs / (1000 * 60 * 60));
+                const waitMins = Math.ceil((waitMs % (1000 * 60 * 60)) / (1000 * 60));
+
+                throw new Error(`You've used your 10 free prompts. Please wait ${waitHours}h ${waitMins}m or upgrade to Vosiqs+ for unlimited prompts!`);
+            }
+
+            await userRef.update({
+                'usage.prompts': admin.firestore.FieldValue.increment(1)
+            });
+        } else {
+            await userRef.update({
+                'usage.rerolls': admin.firestore.FieldValue.increment(1)
+            });
+        }
+
+        return true;
     } catch (error: any) {
         // Handle Firestore database not found error (code 5)
         if (error.code === 5 || error.message?.includes('NOT_FOUND')) {

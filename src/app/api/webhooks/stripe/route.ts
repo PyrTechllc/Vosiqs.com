@@ -10,10 +10,15 @@ export async function POST(req: Request) {
     let event;
 
     try {
+        if (!process.env.STRIPE_WEBHOOK_SECRET) {
+            console.error('Missing STRIPE_WEBHOOK_SECRET');
+            return new NextResponse('Webhook Error: System Configuration', { status: 500 });
+        }
+
         event = stripe.webhooks.constructEvent(
             body,
             signature,
-            process.env.STRIPE_WEBHOOK_SECRET!
+            process.env.STRIPE_WEBHOOK_SECRET
         );
     } catch (error: any) {
         return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });

@@ -62,7 +62,7 @@ export default function AppPage() {
       }
     } else {
       // Guest usage tracking
-      const GUEST_LIMIT = 10;
+      const GUEST_LIMIT = 10; // Strict limit for free users
       const SEVEN_HOURS = 7 * 60 * 60 * 1000;
       const now = Date.now();
 
