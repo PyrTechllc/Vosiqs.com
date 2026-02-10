@@ -14,9 +14,13 @@ if (!admin.apps.length && hasCredentials) {
             credential: admin.credential.cert({
                 projectId: process.env.FIREBASE_PROJECT_ID!,
                 clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-                privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
+                privateKey: (process.env.FIREBASE_PRIVATE_KEY || "")
+                    .replace(/\\n/g, "\n") // Handle escaped newlines
+                    .replace(/^"|"$/g, ""), // Remove enclosing quotes if present
             }),
         });
+        // Prevent crashes when saving objects with undefined fields
+        admin.firestore().settings({ ignoreUndefinedProperties: true });
     } catch (error) {
         console.error("Failed to initialize Firebase Admin:", error);
     }
