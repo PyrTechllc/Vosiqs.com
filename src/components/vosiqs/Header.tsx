@@ -7,31 +7,29 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu';
-import { ChevronDown, Crown, User, LogOut, Loader2, Menu } from 'lucide-react';
-import { useUser, signInWithGoogle, signOut } from '@/firebase';
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { ChevronDown, Crown, Menu } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useUser,
+} from '@clerk/nextjs';
 
 import { useState } from 'react';
 import { PricingModal } from './PricingModal';
 
-// ... (other imports remain, just adding useState and PricingModal)
-
 export function VosiqsHeader() {
-  const { user, isLoading } = useUser();
+  const { user, isLoaded } = useUser();
   const { isMobile, toggleSidebar } = useSidebar();
   const [showPricing, setShowPricing] = useState(false);
-
   const { toast } = useToast();
 
   const handleUpgradeClick = () => {
     if (!user) {
       toast({ title: "Sign In Required", description: "Please sign in to upgrade." });
-      signInWithGoogle();
       return;
     }
     setShowPricing(true);
@@ -68,53 +66,22 @@ export function VosiqsHeader() {
           <Crown className="w-4 h-4 text-amber-400" />
           <span className="hidden sm:inline">Get Plus</span>
         </Button>
-        {isLoading ? (
-          <Loader2 className="w-5 h-5 animate-spin" />
-        ) : user ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.photoURL ?? ''} alt={user.displayName ?? 'User'} />
-                  <AvatarFallback>{user.displayName?.charAt(0) ?? 'U'}</AvatarFallback>
-                </Avatar>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()} className='gap-2'>
-                <LogOut />
-                Sign Out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <Button
-            variant="ghost"
-            onClick={async () => {
-              try {
-                await signInWithGoogle();
-              } catch (error: any) {
-                if (error.code === 'auth/popup-blocked') {
-                  toast({
-                    variant: "destructive",
-                    title: "Popup Blocked",
-                    description: "Please allow popups for this site to sign in with Google."
-                  });
-                } else if (error.code !== 'auth/popup-closed-by-user') {
-                  toast({
-                    variant: "destructive",
-                    title: "Sign In Failed",
-                    description: error.message || "An unexpected error occurred."
-                  });
-                }
-              }
+
+        <SignedOut>
+          <SignInButton mode="modal">
+            <Button variant="ghost">Sign In</Button>
+          </SignInButton>
+        </SignedOut>
+
+        <SignedIn>
+          <UserButton
+            appearance={{
+              elements: {
+                avatarBox: "h-8 w-8",
+              },
             }}
-          >
-            Sign In
-          </Button>
-        )}
+          />
+        </SignedIn>
       </div>
       <PricingModal isOpen={showPricing} onOpenChange={setShowPricing} />
     </header>

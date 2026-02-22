@@ -9,8 +9,7 @@ import { generatePlaylistAction } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Card } from '@/components/ui/card';
-import { useUser } from '@/firebase';
+import { useUser } from '@clerk/nextjs';
 import { checkAndIncrementUsage, savePlaylist } from '@/lib/firestore-utils';
 
 const VosiqsLogo = ({ className }: { className?: string }) => (
@@ -33,7 +32,7 @@ export default function AppPage() {
   const [playingVideo, setPlayingVideo] = useState<Video | null>(null);
   const [rerollCount, setRerollCount] = useState(0);
   const { toast } = useToast();
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
 
   useEffect(() => {
     const playlistToEditJson = sessionStorage.getItem('vosiqs-edit-playlist');
@@ -55,7 +54,7 @@ export default function AppPage() {
 
     if (user) {
       try {
-        await checkAndIncrementUsage(user.uid, 'prompt');
+        await checkAndIncrementUsage(user.id, 'prompt');
       } catch (e: any) {
         toast({ variant: "destructive", title: "Limit Reached", description: e.message });
         return;
@@ -159,7 +158,7 @@ export default function AppPage() {
       return;
     }
     try {
-      await savePlaylist(user.uid, playlist);
+      await savePlaylist(user.id, playlist);
       toast({
         title: "Playlist Saved!",
         description: `"${playlist.name}" has been added to your library.`,
@@ -255,9 +254,6 @@ export default function AppPage() {
         </div>
 
         <div className="w-full max-w-4xl mx-auto p-4 space-y-4">
-          <Card className='h-24 flex items-center justify-center'>
-            <span className='text-muted-foreground'>Ad Banner</span>
-          </Card>
           <PromptForm
             prompt={prompt}
             setPrompt={setPrompt}

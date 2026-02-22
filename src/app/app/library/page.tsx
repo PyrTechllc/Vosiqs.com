@@ -6,13 +6,14 @@ import type { Playlist } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { useEffect, useState } from 'react';
-import { useUser } from '@/firebase';
+import { useUser } from '@clerk/nextjs';
 import { getPlaylists, deletePlaylist } from '@/lib/firestore-utils';
 
 export default function LibraryPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const { user, isLoading: isAuthLoading } = useUser();
+  const { user, isLoaded } = useUser();
+  const isAuthLoading = !isLoaded;
   const [playlists, setPlaylists] = useState<(Playlist & { id: string })[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -20,7 +21,7 @@ export default function LibraryPage() {
     async function fetchPlaylists() {
       if (!user) return;
       try {
-        const data = await getPlaylists(user.uid);
+        const data = await getPlaylists(user.id);
         setPlaylists(data);
       } catch (error) {
         console.error("Failed to fetch playlists", error);
@@ -68,7 +69,7 @@ export default function LibraryPage() {
   const handleDelete = async (playlist: Playlist & { id: string }) => {
     if (!user) return;
     try {
-      await deletePlaylist(user.uid, playlist.id);
+      await deletePlaylist(user.id, playlist.id);
       setPlaylists(prev => prev.filter(p => p.id !== playlist.id));
       toast({
         title: 'Deleted',

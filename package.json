@@ -12,6 +12,7 @@
     "setup-firebase": "node scripts/setup-firebase-admin.js"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.37.3",
     "@genkit-ai/google-genai": "^1.27.0",
     "@google/generative-ai": "^0.21.0",
     "@hookform/resolvers": "^3.9.0",

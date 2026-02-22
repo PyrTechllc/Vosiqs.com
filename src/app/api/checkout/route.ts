@@ -1,10 +1,6 @@
 import { stripe } from '@/lib/stripe';
 import { NextResponse } from 'next/server';
 
-const PRO_PRICE_ID = 'price_1Q...'; // Placeholder, user needs to set this or create product via API (complex).
-// Actually, for MVP, we can create a product on the fly or ask user to provide Price ID.
-// Better: Create product inline? No, `line_items` with `price_data`.
-
 export async function POST(req: Request) {
     try {
         const { userId, userEmail, plan = 'monthly' } = await req.json();
@@ -14,36 +10,34 @@ export async function POST(req: Request) {
         }
 
         let priceData;
-        let subscriptionData = {};
+        let subscriptionData: Record<string, any> = {};
 
         if (plan === 'weekly') {
             priceData = {
                 unit_amount: 399, // $3.99
-                recurring: { interval: 'week' },
+                recurring: { interval: 'week' as const },
                 product_data: {
                     name: 'Vosiqs+ Pro (Weekly)',
                     description: 'Unlimited playlists, downloads, and no ads. Billed weekly.',
-                }
+                },
             };
         } else {
-            // Default to Monthly
             priceData = {
                 unit_amount: 599, // $5.99
-                recurring: { interval: 'month' },
+                recurring: { interval: 'month' as const },
                 product_data: {
                     name: 'Vosiqs+ Pro (Monthly)',
                     description: 'Unlimited playlists, downloads, and no ads. Billed monthly.',
-                }
+                },
             };
-            // Add 7-day trial for monthly plan
             subscriptionData = {
                 trial_period_days: 7,
             };
         }
 
         const checkoutSession = await stripe.checkout.sessions.create({
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/app?success=true`,
-            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/app?canceled=true`,
+            success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002'}/app?success=true`,
+            cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:9002'}/app?canceled=true`,
             payment_method_types: ['card'],
             mode: 'subscription',
             billing_address_collection: 'auto',
@@ -54,7 +48,7 @@ export async function POST(req: Request) {
                         currency: 'usd',
                         product_data: priceData.product_data,
                         unit_amount: priceData.unit_amount,
-                        recurring: priceData.recurring as any,
+                        recurring: priceData.recurring,
                     },
                     quantity: 1,
                 },

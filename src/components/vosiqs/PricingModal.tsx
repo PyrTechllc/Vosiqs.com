@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Check, Loader2 } from 'lucide-react';
-import { useUser, signInWithGoogle } from '@/firebase';
+import { useUser } from '@clerk/nextjs';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
@@ -21,7 +21,6 @@ export function PricingModal({ isOpen, onOpenChange }: PricingModalProps) {
     const handleSubscribe = async () => {
         if (!user) {
             toast({ title: "Sign In Required", description: "Please sign in to upgrade." });
-            signInWithGoogle();
             return;
         }
 
@@ -31,8 +30,8 @@ export function PricingModal({ isOpen, onOpenChange }: PricingModalProps) {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    userId: user.uid,
-                    userEmail: user.email,
+                    userId: user.id,
+                    userEmail: user.emailAddresses[0]?.emailAddress,
                     plan: selectedPlan
                 })
             });
@@ -151,10 +150,6 @@ export function PricingModal({ isOpen, onOpenChange }: PricingModalProps) {
                         <li className="flex items-start gap-3 text-sm">
                             <Check className="w-5 h-5 text-primary shrink-0" />
                             <span>Download playlists</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-sm">
-                            <Check className="w-5 h-5 text-primary shrink-0" />
-                            <span>No ads</span>
                         </li>
                     </ul>
                 </div>
