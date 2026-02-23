@@ -23,7 +23,8 @@ export async function searchYouTube(query: string, maxResults = 12, accessToken?
     url.searchParams.append('type', 'video');
     url.searchParams.append('videoEmbeddable', 'true');
 
-    if (apiKey) url.searchParams.append('key', apiKey);
+    // Only add API key if NOT using OAuth — sending both causes a 401
+    if (apiKey && !accessToken) url.searchParams.append('key', apiKey);
 
     try {
         const headers: HeadersInit = {};

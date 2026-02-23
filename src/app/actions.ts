@@ -64,7 +64,9 @@ export async function generatePlaylistAction(prompt: string, youtubeToken?: stri
     let ytVideos = [];
     try {
       console.log('Step 2: Fetching YouTube videos with query:', initialResult.refinedQuery);
-      ytVideos = await searchYouTube(initialResult.refinedQuery, 50, youtubeToken);
+      // Don't pass OAuth token to searchYouTube — public search only needs the API key.
+      // Mixing both auth methods causes a 401. OAuth is only needed for getUserContext.
+      ytVideos = await searchYouTube(initialResult.refinedQuery, 50);
       console.log(`Found ${ytVideos.length} videos from YouTube`);
     } catch (ytError: any) {
       console.error('YouTube Search Error:', ytError);
