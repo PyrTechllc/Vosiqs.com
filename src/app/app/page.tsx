@@ -24,6 +24,39 @@ const VosiqsLogo = ({ className }: { className?: string }) => (
   </div>
 );
 
+const InitialState = () => (
+  <div className="text-center animate-in fade-in-50 duration-500">
+    <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-col gap-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter leading-tight">
+          What do you want to watch?
+        </h1>
+      </div>
+    </div>
+  </div>
+);
+
+const LoadingState = ({ prompt }: { prompt: string }) => (
+  <div className="w-full max-w-4xl mx-auto space-y-8 animate-in fade-in-50">
+    <div className='flex justify-center'>
+      <VosiqsLogo />
+    </div>
+    <div className="space-y-4">
+      <div className="bg-primary/90 text-primary-foreground p-4 rounded-xl max-w-md ml-auto shadow-lg">
+        <p>{prompt}</p>
+      </div>
+      <div className="flex items-start gap-4">
+        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 shadow-lg">
+          <Sparkles className="w-5 h-5 text-primary-foreground animate-pulse" />
+        </div>
+        <div className="bg-muted text-muted-foreground p-4 rounded-xl max-w-md shadow-md">
+          <p className="animate-pulse">Here's a playlist that...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 export default function AppPage() {
   const [prompt, setPrompt] = useState('');
   const [playlist, setPlaylist] = useState<Playlist | null>(null);
@@ -187,42 +220,9 @@ export default function AppPage() {
     setPrompt('');
   };
 
-  const InitialState = () => (
-    <div className="text-center animate-in fade-in-50 duration-500">
-      <div className="flex flex-col items-center gap-8">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter leading-tight">
-            What do you want to watch?
-          </h1>
-        </div>
-      </div>
-    </div>
-  );
-
-  const LoadingState = () => (
-    <div className="w-full max-w-4xl mx-auto space-y-8 animate-in fade-in-50">
-      <div className='flex justify-center'>
-        <VosiqsLogo />
-      </div>
-      <div className="space-y-4">
-        <div className="bg-primary/90 text-primary-foreground p-4 rounded-xl max-w-md ml-auto shadow-lg">
-          <p>{prompt}</p>
-        </div>
-        <div className="flex items-start gap-4">
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0 shadow-lg">
-            <Sparkles className="w-5 h-5 text-primary-foreground animate-pulse" />
-          </div>
-          <div className="bg-muted text-muted-foreground p-4 rounded-xl max-w-md shadow-md">
-            <p className="animate-pulse">Here's a playlist that...</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   const renderContent = () => {
     if (isLoading) {
-      return <LoadingState />;
+      return <LoadingState prompt={prompt} />;
     }
     if (error) {
       return <div className="text-center text-destructive p-4 bg-destructive/10 rounded-lg">{error}</div>;
